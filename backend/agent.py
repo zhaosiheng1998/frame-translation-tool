@@ -25,6 +25,7 @@ class AgentState(TypedDict):
 def get_llm():
     import os
     from dotenv import load_dotenv
+    import sys
     
     # Load environment variables
     load_dotenv()
@@ -38,24 +39,47 @@ def get_llm():
             # Try different import patterns for DeepSeek
             try:
                 from langchain_deepseek import ChatDeepseek
+                print(f"Successfully imported ChatDeepseek from langchain_deepseek")
                 return ChatDeepseek(
                     model=model_name,
                     temperature=0.1
                 )
-            except (ImportError, AttributeError):
-                from langchain_community.chat_models import ChatDeepSeek
-                return ChatDeepSeek(
-                    model=model_name,
-                    temperature=0.1
-                )
-        except ImportError:
-            print("Warning: DeepSeek integration not found. Falling back to OpenAI.")
-            return ChatOpenAI(
-                model="gpt-3.5-turbo",
-                temperature=0.1
-            )
+            except (ImportError, AttributeError) as e:
+                print(f"First import attempt failed: {str(e)}")
+                try:
+                    from langchain_community.chat_models import ChatDeepSeek
+                    print(f"Successfully imported ChatDeepSeek from langchain_community")
+                    return ChatDeepSeek(
+                        model=model_name,
+                        temperature=0.1
+                    )
+                except (ImportError, AttributeError) as e2:
+                    print(f"Second import attempt failed: {str(e2)}")
+                    raise ImportError(f"Could not import DeepSeek from either langchain_deepseek or langchain_community: {str(e)}, {str(e2)}")
+        except ImportError as e:
+            error_message = f"""
+ERROR: DeepSeek integration not found. Please install the required packages:
+
+    pip install langchain-deepseek
+    pip install langchain-community
+
+If you've already installed these packages and still see this error, 
+you may need to check your Python environment or try:
+
+    pip install --upgrade langchain-deepseek langchain-community
+
+Error details: {str(e)}
+"""
+            print(error_message, file=sys.stderr)
+            raise ImportError(error_message)
     else:
-        # Fallback to OpenAI if specified in .env
+        # Using OpenAI
+        openai_api_key = os.getenv("OPENAI_API_KEY")
+        if not openai_api_key:
+            raise ValueError(
+                "OpenAI API key not found. Please set OPENAI_API_KEY in your .env file, "
+                "or change DEFAULT_MODEL to a DeepSeek model."
+            )
         return ChatOpenAI(
             model=model_name,
             temperature=0.1
