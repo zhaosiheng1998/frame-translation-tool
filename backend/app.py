@@ -166,4 +166,4 @@ if __name__ == '__main__':
         print(f"Warning: Default Frame file {DEFAULT_FRAME_PATH} does not exist")
     
     # Start application
-    app.run(debug=True, port=5000)
+    app.run(debug=True, host='0.0.0.0', port=8080)
