@@ -36,26 +36,25 @@ def get_llm():
     # Check if using DeepSeek or OpenAI
     if "deepseek" in model_name.lower():
         try:
-            # Try different import patterns for DeepSeek
+            # Use the official import pattern for DeepSeek
             try:
-                from langchain_deepseek import ChatDeepseek
-                print(f"Successfully imported ChatDeepseek from langchain_deepseek")
-                return ChatDeepseek(
+                from langchain_deepseek import ChatDeepSeek
+                print(f"Successfully imported ChatDeepSeek from langchain_deepseek")
+                return ChatDeepSeek(
                     model=model_name,
                     temperature=0.1
                 )
             except (ImportError, AttributeError) as e:
-                print(f"First import attempt failed: {str(e)}")
-                try:
-                    from langchain_community.chat_models import ChatDeepSeek
-                    print(f"Successfully imported ChatDeepSeek from langchain_community")
-                    return ChatDeepSeek(
-                        model=model_name,
-                        temperature=0.1
-                    )
-                except (ImportError, AttributeError) as e2:
-                    print(f"Second import attempt failed: {str(e2)}")
-                    raise ImportError(f"Could not import DeepSeek from either langchain_deepseek or langchain_community: {str(e)}, {str(e2)}")
+                print(f"Import attempt failed: {str(e)}")
+                print(f"Installed packages in site-packages directory:")
+                import os, sys
+                site_packages = next((p for p in sys.path if p.endswith('site-packages')), None)
+                if site_packages:
+                    for pkg in os.listdir(site_packages):
+                        if 'deepseek' in pkg.lower() or 'langchain' in pkg.lower():
+                            print(f"  - {pkg}")
+                
+                raise ImportError(f"Could not import ChatDeepSeek from langchain_deepseek. Please install the package using: pip install langchain-deepseek. Error: {str(e)}")
         except ImportError as e:
             error_message = f"""
 ERROR: DeepSeek integration not found. Please install the required packages:
