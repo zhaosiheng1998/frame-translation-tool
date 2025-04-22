@@ -54,6 +54,36 @@ header h1 {
     opacity: 0.9;
 }
 
+/* 框架选择器 */
+.frame-selector-container {
+    padding: 15px 20px;
+    background-color: var(--light-gray);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.frame-selector-container label {
+    font-weight: 600;
+    margin-bottom: 0;
+    white-space: nowrap;
+}
+
+#frame-selector {
+    flex-grow: 1;
+    max-width: 500px;
+}
+
+.frame-info-badge {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
 /* Frame 信息区域 */
 .frame-info-container {
     padding: 20px;

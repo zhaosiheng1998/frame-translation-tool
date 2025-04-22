@@ -1,0 +1,182 @@
+{
+  "frame_name": "Travel_transportation",
+  "frame_id": "FR0101",
+  "description": "This frame describes a scenario where a Traveler moves from a Source to a Destination using a Vehicle. The journey may involve specific Routes and may be undertaken for a particular Purpose.",
+  "frame_elements": {
+    "core_elements": [
+      {
+        "name": "Traveler",
+        "description": "The person or entity that moves from one location to another.",
+        "semantic_type": "Sentient"
+      },
+      {
+        "name": "Vehicle",
+        "description": "The means of transportation used by the Traveler.",
+        "semantic_type": "Entity"
+      },
+      {
+        "name": "Source",
+        "description": "The starting point of the journey.",
+        "semantic_type": "Location"
+      },
+      {
+        "name": "Destination",
+        "description": "The endpoint or goal of the journey.",
+        "semantic_type": "Location"
+      }
+    ],
+    "non_core_elements": [
+      {
+        "name": "Duration",
+        "description": "The length of time the journey takes.",
+        "semantic_type": "Time"
+      },
+      {
+        "name": "Route",
+        "description": "The path taken from Source to Destination.",
+        "semantic_type": "Path"
+      },
+      {
+        "name": "Purpose",
+        "description": "The reason for undertaking the journey.",
+        "semantic_type": "State"
+      },
+      {
+        "name": "Manner",
+        "description": "The way in which the journey is conducted.",
+        "semantic_type": "State"
+      },
+      {
+        "name": "Co_traveler",
+        "description": "Person(s) accompanying the Traveler.",
+        "semantic_type": "Sentient"
+      },
+      {
+        "name": "Distance",
+        "description": "The spatial extent of the journey.",
+        "semantic_type": "Quantity"
+      }
+    ]
+  },
+  "lexical_units": [
+    {
+      "lemma": "travel",
+      "pos": "V",
+      "definition": "To go from one place to another, as on a trip or journey"
+    },
+    {
+      "lemma": "journey",
+      "pos": "V",
+      "definition": "To travel from one place to another"
+    },
+    {
+      "lemma": "trip",
+      "pos": "N",
+      "definition": "A journey to a place and back again"
+    },
+    {
+      "lemma": "commute",
+      "pos": "V",
+      "definition": "To travel regularly between one's home and place of work"
+    },
+    {
+      "lemma": "drive",
+      "pos": "V",
+      "definition": "To operate and control the movement of a vehicle"
+    },
+    {
+      "lemma": "fly",
+      "pos": "V",
+      "definition": "To travel through the air in an aircraft"
+    }
+  ],
+  "frame_relations": [
+    {
+      "relation_type": "Inherits from",
+      "related_frame": "Motion"
+    },
+    {
+      "relation_type": "Uses",
+      "related_frame": "Vehicle"
+    },
+    {
+      "relation_type": "Precedes",
+      "related_frame": "Arriving"
+    }
+  ],
+  "example_sentences": [
+    {
+      "text": "Sarah [Traveler] flew from New York [Source] to Tokyo [Destination] on a Boeing 787 [Vehicle] for her business meeting [Purpose].",
+      "annotation": {
+        "Traveler": "Sarah",
+        "Source": "New York",
+        "Destination": "Tokyo",
+        "Vehicle": "a Boeing 787",
+        "Purpose": "for her business meeting",
+        "lexical_unit": "flew"
+      }
+    },
+    {
+      "text": "The family [Traveler] drove along the coastal highway [Route] to reach the beach resort [Destination] in their SUV [Vehicle].",
+      "annotation": {
+        "Traveler": "The family",
+        "Route": "along the coastal highway",
+        "Destination": "the beach resort",
+        "Vehicle": "their SUV",
+        "lexical_unit": "drove"
+      }
+    },
+    {
+      "text": "He [Traveler] commutes from the suburbs [Source] to downtown [Destination] by train [Vehicle] every day [Duration].",
+      "annotation": {
+        "Traveler": "He",
+        "Source": "the suburbs",
+        "Destination": "downtown",
+        "Vehicle": "train",
+        "Duration": "every day",
+        "lexical_unit": "commutes"
+      }
+    }
+  ],
+  "few_shot_prompts": {
+    "identification_prompt": "Identify the Travel_transportation frame elements in the following sentence: 'Tom traveled from Chicago to Miami by bus last weekend.'",
+    "expected_response": {
+      "Traveler": "Tom",
+      "Source": "Chicago",
+      "Destination": "Miami",
+      "Vehicle": "bus",
+      "Time": "last weekend",
+      "lexical_unit": "traveled"
+    },
+    "generation_prompt": "Generate a sentence using the Travel_transportation frame where the Traveler is 'the tourists', the Vehicle is 'a cruise ship', and the Destination is 'the Caribbean islands'.",
+    "expected_generation": "The tourists [Traveler] sailed from Miami [Source] to the Caribbean islands [Destination] on a cruise ship [Vehicle] for a two-week vacation [Purpose and Duration].",
+    "translation_prompt": "Translate the following sentence while preserving all Travel_transportation frame elements: 'The businessman flew from London to New York on a private jet yesterday.'",
+    "expected_translation": {
+      "English": "The businessman [Traveler] flew from London [Source] to New York [Destination] on a private jet [Vehicle] yesterday [Time].",
+      "Japanese": "そのビジネスマン[Traveler]は昨日[Time]プライベートジェット[Vehicle]でロンドン[Source]からニューヨーク[Destination]へ飛びました。",
+      "Spanish": "El empresario [Traveler] voló de Londres [Source] a Nueva York [Destination] en un jet privado [Vehicle] ayer [Time]."
+    },
+    "frame_inference_prompt": "If someone says 'I'm taking the 3pm train to Boston tomorrow', what frame elements can we infer even though they're not explicitly stated?",
+    "expected_inference": {
+      "inferred_elements": {
+        "Traveler": "I (the speaker)",
+        "Vehicle": "train",
+        "Destination": "Boston",
+        "Time": "tomorrow at 3pm",
+        "Source": "[current location of the speaker, though not specified]"
+      },
+      "reasoning": "The sentence explicitly mentions the Vehicle (train), the Destination (Boston), and when the journey will take place (tomorrow, 3pm). We can infer that the Traveler is the speaker ('I'), and there must be a Source location (where the speaker currently is), though it's not specified."
+    }
+  },
+  "language_specific_variations": {
+    "Japanese": {
+      "lexical_units": ["旅行する (ryokō suru)", "移動する (idō suru)", "通勤する (tsūkin suru)"],
+      "grammatical_notes": "In Japanese, particles like 'から' mark the Source, 'へ' or 'に' mark the Destination, and 'で' often marks the Vehicle.",
+      "cultural_notes": "In Japanese, there's often emphasis on the mode of transportation, with specific verbs for different vehicles (e.g., 乗る (noru) for riding, 運転する (unten suru) for driving)."
+    },
+    "Spanish": {
+      "lexical_units": ["viajar", "conducir", "volar", "navegar"],
+      "grammatical_notes": "In Spanish, prepositions 'de' typically marks the Source and 'a' marks the Destination. 'En' or 'por' often indicate the Vehicle or Route."
+    }
+  }
+}

@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleFrameAnalysisBtn = document.getElementById('toggle-frame-analysis');
     const frameInfoContent = document.getElementById('frame-info');
     const exampleButtons = document.querySelectorAll('.example-btn');
+    const frameSelector = document.getElementById('frame-selector');
+    const frameIdBadge = document.getElementById('frame-id-badge');
     
     // Frame information elements
     const frameNameElement = document.getElementById('frame-name');
@@ -20,11 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const nonCoreElementsList = document.getElementById('non-core-elements-list');
     const lexicalUnitsList = document.getElementById('lexical-units-list');
     
-    // Default Frame path
-    const framePath = 'commerce-buy-frame.json';
+    // Current frame data
+    let currentFramePath = '';
+    let currentFrameName = '';
     
-    // Initialize - load Frame information
-    loadFrameInfo();
+    // Initialize - load available frames and frame information
+    loadAvailableFrames();
     
     // Event listeners
     swapLanguagesBtn.addEventListener('click', swapLanguages);
@@ -49,13 +52,68 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function definitions
     
     /**
-     * Load Frame information
+     * Load available frames
      */
-    function loadFrameInfo() {
-        fetch(`/api/frame-info?path=${framePath}`)
+    function loadAvailableFrames() {
+        fetch('/api/frames')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
+                    populateFrameSelector(data.data);
+                    
+                    // Load default frame info if frames are available
+                    if (data.data.length > 0) {
+                        const defaultFrame = data.data[0];
+                        frameSelector.value = defaultFrame.name;
+                        loadFrameInfo(defaultFrame.name);
+                    } else {
+                        console.warn('No frames available');
+                    }
+                } else {
+                    console.error('Failed to load frames:', data.message);
+                    alert('Failed to load frames: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error requesting frames:', error);
+                alert('Error requesting frames: ' + error.message);
+            });
+    }
+    
+    /**
+     * Populate frame selector dropdown
+     */
+    function populateFrameSelector(frames) {
+        // Clear existing options
+        frameSelector.innerHTML = '';
+        
+        // Add options for each frame
+        frames.forEach(frame => {
+            const option = document.createElement('option');
+            option.value = frame.name;
+            option.textContent = `${frame.name} - ${frame.description}`;
+            frameSelector.appendChild(option);
+        });
+        
+        // Add event listener for frame selection
+        frameSelector.addEventListener('change', function() {
+            const selectedFrameName = this.value;
+            if (selectedFrameName) {
+                loadFrameInfo(selectedFrameName);
+            }
+        });
+    }
+    
+    /**
+     * Load Frame information
+     */
+    function loadFrameInfo(frameName) {
+        fetch(`/api/frame-info?name=${encodeURIComponent(frameName)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    currentFramePath = data.data.path;
+                    currentFrameName = data.data.frame_name;
                     displayFrameInfo(data.data);
                 } else {
                     console.error('Failed to load Frame information:', data.message);
@@ -72,8 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
      * Display Frame information
      */
     function displayFrameInfo(frameInfo) {
-        // Set Frame name and description
+        // Set Frame name, ID and description
         frameNameElement.textContent = frameInfo.frame_name;
+        frameIdBadge.textContent = frameInfo.frame_id;
         frameDescriptionElement.textContent = frameInfo.description;
         
         // Clear lists
@@ -132,6 +191,11 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        if (!currentFrameName) {
+            alert('Please select a frame first');
+            return;
+        }
+        
         // Show loading indicator
         loadingIndicator.style.display = 'flex';
         translateBtn.disabled = true;
@@ -150,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 source_text: sourceText,
                 source_language: sourceLanguage,
                 target_language: targetLanguage,
-                frame_path: framePath
+                frame_name: currentFrameName
             })
         })
         .then(response => response.json())
@@ -235,6 +299,12 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/\bnull\b/g, '<span class="json-null">null</span>');
         
         return `<pre>${highlighted}</pre>`;
+    }
+    
+    // Update example sentences based on selected frame
+    function updateExampleSentences() {
+        // This would ideally fetch examples for the current frame
+        // For now, we'll keep the existing examples
     }
     
     // Initialize display/hide state

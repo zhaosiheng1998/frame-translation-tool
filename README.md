@@ -4,10 +4,11 @@ A semantic understanding translation tool that leverages Frame semantics to prov
 
 ## 🌟 Features
 
-- **Frame-based Semantic Understanding**: Uses the Commerce_buy frame to understand the semantic structure of text
+- **Frame-based Semantic Understanding**: Uses semantic frames to understand the structure of text
+- **Multiple Frame Support**: Includes Commerce_buy, Travel_transportation, and easily extendable to other frames
 - **Bidirectional Translation**: Supports translation between English and Japanese
 - **Semantic Element Preservation**: Identifies and preserves frame elements during translation
-- **Interactive UI**: User-friendly interface with language selection, example sentences, and visualization of frame analysis
+- **Interactive UI**: User-friendly interface with frame selection, language selection, and visualization of frame analysis
 - **Flexible Model Support**: Configurable to use either DeepSeek or OpenAI models
 
 ## 🏗️ Architecture
@@ -21,16 +22,24 @@ The system is built using a combination of LangGraph for agent workflow and Flas
 │  (HTML/JS/CSS)  │     │   Endpoints     │     │  Agent Workflow │
 │                 │◀────│                 │◀────│                 │
 └─────────────────┘     └─────────────────┘     └─────────────────┘
+        │                      │                        │
+        │                      │                        │
+        ▼                      ▼                        ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│                      Semantic Frame Repository                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ### Agent Workflow
 
 The translation process follows a two-step workflow:
 
-1. **Frame Analysis**: The source text is analyzed to identify frame elements (e.g., Buyer, Goods, Seller, Money)
+1. **Frame Analysis**: The source text is analyzed to identify frame elements specific to the selected semantic frame
 2. **Translation**: The text is translated while preserving the identified frame elements
 
-This approach ensures that the semantic structure of the original text is maintained in the translation.
+This approach ensures that the semantic structure of the original text is maintained in the translation, regardless of which semantic frame is being used.
 
 ## 🚀 Getting Started
 
@@ -105,8 +114,11 @@ This project demonstrates how to leverage frame semantics in natural language pr
 │   │       └── script.js
 │   └── templates/
 │       └── index.html
+├── frames/             # Semantic frame definitions
+│   ├── commerce-buy-frame.json
+│   ├── travel-transportation-frame.json
+│   └── frame_format_guide.md
 ├── .env.example        # Example environment variables
-├── commerce-buy-frame.json  # Frame definition
 ├── requirements.txt    # Project dependencies
 ├── run.py              # Application entry point
 └── README.md           # Project documentation
@@ -124,10 +136,48 @@ This project demonstrates how to leverage frame semantics in natural language pr
 
 ### Using Different Frames
 
-To use a different semantic frame:
+The system is designed to be easily extended with new semantic frames. To add a new frame:
 
-1. Create a JSON file with the frame definition following the same structure as `commerce-buy-frame.json`.
-2. Update the `DEFAULT_FRAME_PATH` in `backend/app.py`.
+1. Create a JSON file in the `frames/` directory following the format described in `frames/frame_format_guide.md`.
+2. Name your file using the pattern `frame-name-frame.json` (e.g., `emotion-experience-frame.json`).
+3. Restart the application - the new frame will be automatically detected and available in the dropdown menu.
+
+### Frame Definition Format
+
+Each frame is defined in a JSON file with the following key components:
+
+- **Basic Information**: Frame name, ID, and description
+- **Frame Elements**: Core and non-core elements with descriptions and semantic types
+- **Lexical Units**: Words that evoke the frame
+- **Example Sentences**: Annotated examples showing how the frame is used
+- **Few-shot Prompts**: Examples for the LLM to learn from
+- **Language-specific Variations**: Information about how the frame is expressed in different languages
+
+For detailed guidelines on creating frame definitions, see `frames/frame_format_guide.md`.
+
+### Example Frame Structure
+
+```json
+{
+  "frame_name": "Frame_name",
+  "frame_id": "FRXXXX",
+  "description": "Description of the frame",
+  "frame_elements": {
+    "core_elements": [
+      {
+        "name": "Element_name",
+        "description": "Element description",
+        "semantic_type": "Type"
+      }
+    ],
+    "non_core_elements": [...]
+  },
+  "lexical_units": [...],
+  "example_sentences": [...],
+  "few_shot_prompts": {...},
+  "language_specific_variations": {...}
+}
+```
 
 ### Using Different Models
 
@@ -142,5 +192,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🙏 Acknowledgements
 
-- This project uses the Commerce_buy frame from FrameNet.
+- This project uses semantic frames inspired by FrameNet.
 - Built with LangGraph, LangChain, and Flask.

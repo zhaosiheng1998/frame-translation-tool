@@ -1,10 +1,11 @@
 import json
 import os
-from typing import Dict, List, Any, Optional
+import glob
+from typing import Dict, List, Any, Optional, Tuple
 
 def load_frame_data(frame_path: str) -> Dict[str, Any]:
     """
-    Load Frame data
+    Load Frame data from a specific file
     
     Args:
         frame_path: Path to the Frame JSON file
@@ -14,6 +15,53 @@ def load_frame_data(frame_path: str) -> Dict[str, Any]:
     """
     with open(frame_path, 'r', encoding='utf-8') as f:
         return json.load(f)
+
+def list_available_frames() -> List[Dict[str, str]]:
+    """
+    List all available frames in the frames directory
+    
+    Returns:
+        List of dictionaries containing frame information (id, name, path)
+    """
+    frames_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'frames')
+    frame_files = glob.glob(os.path.join(frames_dir, '*-frame.json'))
+    
+    frames = []
+    for frame_file in frame_files:
+        try:
+            frame_data = load_frame_data(frame_file)
+            frames.append({
+                'id': frame_data.get('frame_id', ''),
+                'name': frame_data.get('frame_name', ''),
+                'path': frame_file,
+                'description': frame_data.get('description', '')[:100] + '...' if len(frame_data.get('description', '')) > 100 else frame_data.get('description', '')
+            })
+        except Exception as e:
+            print(f"Error loading frame file {frame_file}: {str(e)}")
+    
+    return frames
+
+def get_frame_by_name(frame_name: str) -> Tuple[Dict[str, Any], str]:
+    """
+    Get frame data by frame name
+    
+    Args:
+        frame_name: Name of the frame to find
+        
+    Returns:
+        Tuple of (frame data, frame path)
+        
+    Raises:
+        ValueError: If frame not found
+    """
+    frames = list_available_frames()
+    for frame in frames:
+        if frame['name'].lower() == frame_name.lower():
+            frame_path = frame['path']
+            frame_data = load_frame_data(frame_path)
+            return frame_data, frame_path
+    
+    raise ValueError(f"Frame '{frame_name}' not found")
 
 def extract_frame_elements(frame_data: Dict[str, Any]) -> List[Dict[str, str]]:
     """
