@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame-based English-Japanese Translation Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Frame-based English-Japanese Translation Tool</h1>
+            <p class="subtitle">Semantic understanding translation based on <span id="frame-name">Commerce_buy</span> Frame</p>
+        </header>
+
+        <div class="frame-info-container">
+            <div class="frame-info-header">
+                <h2>Frame Information</h2>
+                <button id="toggle-frame-info">Show/Hide</button>
+            </div>
+            <div class="frame-info-content" id="frame-info">
+                <div class="frame-description">
+                    <h3>Description</h3>
+                    <p id="frame-description"></p>
+                </div>
+                <div class="frame-elements">
+                    <div class="core-elements">
+                        <h3>Core Elements</h3>
+                        <ul id="core-elements-list"></ul>
+                    </div>
+                    <div class="non-core-elements">
+                        <h3>Non-core Elements</h3>
+                        <ul id="non-core-elements-list"></ul>
+                    </div>
+                </div>
+                <div class="lexical-units">
+                    <h3>Lexical Units</h3>
+                    <ul id="lexical-units-list"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="translation-container">
+            <div class="language-selection">
+                <div class="source-language">
+                    <label for="source-language">Source Language:</label>
+                    <select id="source-language">
+                        <option value="English">English</option>
+                        <option value="Japanese">Japanese</option>
+                    </select>
+                </div>
+                <div class="swap-languages">
+                    <button id="swap-languages">⇄</button>
+                </div>
+                <div class="target-language">
+                    <label for="target-language">Target Language:</label>
+                    <select id="target-language">
+                        <option value="Japanese">Japanese</option>
+                        <option value="English" selected>English</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <label for="source-text">Input Text:</label>
+                <textarea id="source-text" placeholder="Please enter text to translate..."></textarea>
+                <div class="example-sentences">
+                    <h4>Example Sentences:</h4>
+                    <ul>
+                        <li><button class="example-btn" data-lang="English">John bought a new car from the dealership for $25,000.</button></li>
+                        <li><button class="example-btn" data-lang="English">She purchased the house through a real estate agent last month.</button></li>
+                        <li><button class="example-btn" data-lang="English">The company acquired three small businesses for expansion.</button></li>
+                        <li><button class="example-btn" data-lang="Japanese">彼女は先週、オンラインショップで新しい服を買いました。</button></li>
+                        <li><button class="example-btn" data-lang="Japanese">私は友人から中古の自転車を5000円で購入しました。</button></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="translate-btn">Translate</button>
+                <div class="loading" id="loading-indicator">
+                    <div class="spinner"></div>
+                    <span>Translating...</span>
+                </div>
+            </div>
+
+            <div class="result-area">
+                <div class="translation-result">
+                    <h3>Translation Result:</h3>
+                    <div id="translation-result"></div>
+                </div>
+                
+                <div class="frame-analysis">
+                    <div class="frame-analysis-header">
+                        <h3>Frame Analysis:</h3>
+                        <button id="toggle-frame-analysis">Show/Hide</button>
+                    </div>
+                    <div id="frame-analysis" class="frame-analysis-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Frame semantic understanding translation tool built with LangGraph and LangChain</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

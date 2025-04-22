@@ -1,0 +1,177 @@
+{
+  "frame_name": "Commerce_buy",
+  "frame_id": "FR0034",
+  "description": "This frame describes a commercial transaction scenario where a Buyer acquires Goods from a Seller in exchange for Money. The transaction may be specified for a certain Purpose.",
+  "frame_elements": {
+    "core_elements": [
+      {
+        "name": "Buyer",
+        "description": "The person or entity that acquires the Goods and provides the Money in the transaction.",
+        "semantic_type": "Sentient"
+      },
+      {
+        "name": "Goods",
+        "description": "The physical or non-physical items that are being acquired by the Buyer.",
+        "semantic_type": "Entity"
+      },
+      {
+        "name": "Seller",
+        "description": "The person or entity that provides the Goods and receives the Money in the transaction.",
+        "semantic_type": "Sentient"
+      },
+      {
+        "name": "Money",
+        "description": "The amount paid by the Buyer to the Seller in exchange for the Goods.",
+        "semantic_type": "Asset"
+      }
+    ],
+    "non_core_elements": [
+      {
+        "name": "Manner",
+        "description": "The way in which the buying event is carried out.",
+        "semantic_type": "State"
+      },
+      {
+        "name": "Means",
+        "description": "The method by which the buying is accomplished.",
+        "semantic_type": "State"
+      },
+      {
+        "name": "Place",
+        "description": "The location where the buying transaction occurs.",
+        "semantic_type": "Location"
+      },
+      {
+        "name": "Purpose",
+        "description": "The purpose for which the Buyer acquires the Goods.",
+        "semantic_type": "State"
+      },
+      {
+        "name": "Time",
+        "description": "When the buying event takes place.",
+        "semantic_type": "Time"
+      },
+      {
+        "name": "Rate",
+        "description": "The cost per unit of the Goods.",
+        "semantic_type": "Quantity"
+      }
+    ]
+  },
+  "lexical_units": [
+    {
+      "lemma": "buy",
+      "pos": "V",
+      "definition": "To acquire possession or rights to by payment"
+    },
+    {
+      "lemma": "purchase",
+      "pos": "V",
+      "definition": "To obtain by paying money or its equivalent"
+    },
+    {
+      "lemma": "acquire",
+      "pos": "V",
+      "definition": "To get as one's own; to obtain by purchase"
+    },
+    {
+      "lemma": "shop",
+      "pos": "V",
+      "definition": "To visit stores in search of merchandise or bargains"
+    },
+    {
+      "lemma": "buyer",
+      "pos": "N",
+      "definition": "A person who makes a purchase"
+    },
+    {
+      "lemma": "purchase",
+      "pos": "N",
+      "definition": "Something acquired by purchasing"
+    }
+  ],
+  "frame_relations": [
+    {
+      "relation_type": "Inherits from",
+      "related_frame": "Commerce_scenario"
+    },
+    {
+      "relation_type": "Perspective on",
+      "related_frame": "Commercial_transaction"
+    },
+    {
+      "relation_type": "Precedes",
+      "related_frame": "Possession"
+    }
+  ],
+  "example_sentences": [
+    {
+      "text": "John [Buyer] bought a new car [Goods] from the dealership [Seller] for $25,000 [Money].",
+      "annotation": {
+        "Buyer": "John",
+        "Goods": "a new car",
+        "Seller": "the dealership",
+        "Money": "$25,000",
+        "lexical_unit": "bought"
+      }
+    },
+    {
+      "text": "She [Buyer] purchased the house [Goods] through a real estate agent [Means] last month [Time].",
+      "annotation": {
+        "Buyer": "She",
+        "Goods": "the house",
+        "Means": "through a real estate agent",
+        "Time": "last month",
+        "lexical_unit": "purchased"
+      }
+    },
+    {
+      "text": "The company [Buyer] acquired three small businesses [Goods] for expansion [Purpose].",
+      "annotation": {
+        "Buyer": "The company",
+        "Goods": "three small businesses",
+        "Purpose": "for expansion",
+        "lexical_unit": "acquired"
+      }
+    }
+  ],
+  "few_shot_prompts": {
+    "identification_prompt": "Identify the Commerce_buy frame elements in the following sentence: 'Mary purchased a laptop online for her studies.'",
+    "expected_response": {
+      "Buyer": "Mary",
+      "Goods": "a laptop",
+      "Manner": "online",
+      "Purpose": "for her studies",
+      "lexical_unit": "purchased"
+    },
+    "generation_prompt": "Generate a sentence using the Commerce_buy frame where the Buyer is 'the university', the Goods are 'scientific equipment', and the Purpose is 'research'.",
+    "expected_generation": "The university [Buyer] bought scientific equipment [Goods] from a specialized supplier [Seller] for research [Purpose] using grant funds [Money].",
+    "translation_prompt": "Translate the following sentence while preserving all Commerce_buy frame elements: 'The customer bought three books from the online store yesterday.'",
+    "expected_translation": {
+      "English": "The customer [Buyer] bought three books [Goods] from the online store [Seller] yesterday [Time].",
+      "Japanese": "お客様[Buyer]は昨日[Time]オンラインストア[Seller]から本を三冊[Goods]購入しました。",
+      "Spanish": "El cliente [Buyer] compró tres libros [Goods] de la tienda en línea [Seller] ayer [Time]."
+    },
+    "frame_inference_prompt": "If someone says 'I just spent $500 at the electronics store', what frame elements can we infer even though they're not explicitly stated?",
+    "expected_inference": {
+      "inferred_elements": {
+        "Buyer": "I (the speaker)",
+        "Money": "$500",
+        "Seller": "the electronics store",
+        "Goods": "[likely electronic products, though not specified]"
+      },
+      "reasoning": "Although the verb 'spent' doesn't directly evoke the Commerce_buy frame, the context of spending money at a store strongly implies a purchase. We can infer the Buyer, Money, and Seller from the sentence, while the Goods are implied to be electronic products but not explicitly stated."
+    }
+  },
+  "language_specific_variations": {
+    "Japanese": {
+      "lexical_units": ["買う (kau)", "購入する (kōnyū suru)", "仕入れる (shiireru)"],
+      "grammatical_notes": "In Japanese, the particles 'が' or 'は' often mark the Buyer, 'を' marks the Goods, 'から' or 'に' may mark the Seller, and 'で' often marks the Money.",
+      "cultural_notes": "Gift giving contexts in Japanese culture may influence how Commerce_buy frames are expressed, with additional emphasis on social relationships."
+    },
+    "Spanish": {
+      "lexical_units": ["comprar", "adquirir", "hacer compras"],
+      "grammatical_notes": "In Spanish, preposition 'a' might be used for animate Sellers due to personal 'a'."
+    }
+  }
+}
