@@ -47,6 +47,7 @@ This approach ensures that the semantic structure of the original text is mainta
 
 - Python 3.8+
 - DeepSeek API key (or OpenAI API key as fallback)
+- Internet connection (SOCKS proxy support included for restricted networks)
 
 ### Installation
 
@@ -69,7 +70,9 @@ This approach ensures that the semantic structure of the original text is mainta
    Then edit the `.env` file to add your API keys:
    ```
    DEEPSEEK_API_KEY=your_deepseek_api_key_here
-   # Uncomment if you want to use OpenAI
+   DEFAULT_MODEL=deepseek-chat
+   
+   # Uncomment if you want to use OpenAI instead
    # OPENAI_API_KEY=your_openai_api_key_here
    # DEFAULT_MODEL=gpt-4o
    ```
@@ -126,11 +129,11 @@ This project demonstrates how to leverage frame semantics in natural language pr
 
 ## 🔍 How It Works
 
-1. **Frame Loading**: The system loads the Commerce_buy frame definition from a JSON file.
-2. **User Input**: The user selects source and target languages and enters text to translate.
-3. **Frame Analysis**: The system analyzes the source text to identify frame elements.
+1. **Frame Loading**: The system loads all available frame definitions from the `frames/` directory.
+2. **User Input**: The user selects a frame, source and target languages, and enters text to translate.
+3. **Frame Analysis**: The system analyzes the source text to identify frame elements based on the selected frame.
 4. **Translation**: The system translates the text while preserving the identified frame elements.
-5. **Result Display**: The translation and frame analysis are displayed to the user.
+5. **Result Display**: The translation and frame analysis are displayed to the user in a clean, readable format.
 
 ## 🛠️ Customization
 
@@ -185,6 +188,46 @@ The system supports both DeepSeek and OpenAI models. To change the model:
 
 1. Edit the `.env` file to set the `DEFAULT_MODEL` variable.
 2. For OpenAI models, uncomment the `OPENAI_API_KEY` line and add your API key.
+
+## 🔧 Troubleshooting
+
+### DeepSeek Integration Issues
+
+If you encounter issues with DeepSeek integration:
+
+1. Ensure you have installed the correct package:
+   ```bash
+   pip install -qU langchain-deepseek
+   ```
+
+2. Check that your `.env` file contains:
+   ```
+   DEEPSEEK_API_KEY=your_actual_deepseek_api_key
+   DEFAULT_MODEL=deepseek-chat
+   ```
+
+3. If you see errors about missing modules, try reinstalling dependencies:
+   ```bash
+   pip install --upgrade -r requirements.txt
+   ```
+
+### Proxy Connection Issues
+
+The application includes support for SOCKS proxies. If you're behind a proxy:
+
+1. Install the SOCKS support:
+   ```bash
+   pip install httpx[socks]
+   ```
+
+2. Configure your proxy settings in your environment or system settings.
+
+### Port Conflicts
+
+If port 8080 is already in use:
+
+1. Modify the port in `run.py` and `backend/app.py` files
+2. Update the access URL accordingly
 
 ## 📝 License
 
