@@ -285,20 +285,34 @@ document.addEventListener('DOMContentLoaded', function() {
      * Format JSON display
      */
     function formatJSON(obj) {
-        const jsonString = JSON.stringify(obj, null, 2);
+        // Create a formatted display of the frame analysis
+        let formattedContent = '<div class="frame-analysis-content">';
         
-        // Add syntax highlighting
-        const highlighted = jsonString
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:')
-            .replace(/"([^"]*)"/g, '<span class="json-string">"$1"</span>')
-            .replace(/\b(\d+)\b/g, '<span class="json-number">$1</span>')
-            .replace(/\b(true|false)\b/g, '<span class="json-boolean">$1</span>')
-            .replace(/\bnull\b/g, '<span class="json-null">null</span>');
+        // Handle different types of frame analysis results
+        if (typeof obj === 'object' && obj !== null) {
+            // If it's a translation result with language keys
+            if (obj.English || obj.Japanese || obj.Spanish) {
+                // This is likely a translation example, process it differently
+                for (const lang in obj) {
+                    formattedContent += `<div class="analysis-item"><strong>${lang}:</strong> ${obj[lang]}</div>`;
+                }
+            } else {
+                // Regular frame analysis
+                for (const key in obj) {
+                    if (key !== 'lexical_unit') {
+                        formattedContent += `<div class="analysis-item"><strong>${key}:</strong> ${obj[key]}</div>`;
+                    } else {
+                        formattedContent += `<div class="analysis-item"><strong>Lexical Unit:</strong> ${obj[key]}</div>`;
+                    }
+                }
+            }
+        } else {
+            // Fallback to simple display if not an object
+            formattedContent += `<div>${String(obj)}</div>`;
+        }
         
-        return `<pre>${highlighted}</pre>`;
+        formattedContent += '</div>';
+        return formattedContent;
     }
     
     // Update example sentences based on selected frame

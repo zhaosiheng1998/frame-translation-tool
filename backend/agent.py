@@ -183,11 +183,18 @@ def translate_text(state: AgentState) -> AgentState:
     few_shot_prompts = get_few_shot_prompts(frame_data)
     translation_example = ""
     if "translation_prompt" in few_shot_prompts and "expected_translation" in few_shot_prompts:
+        # Format the expected translation to avoid direct JSON output
+        expected_translations = few_shot_prompts['expected_translation']
+        formatted_examples = []
+        
+        for lang, translation in expected_translations.items():
+            formatted_examples.append(f"{lang}: {translation}")
+        
         translation_example = f"""
 Translation example:
 Original: {few_shot_prompts['translation_prompt']}
-Translation: 
-{json.dumps(few_shot_prompts['expected_translation'], ensure_ascii=False, indent=2)}
+Translation examples:
+{chr(10).join(formatted_examples)}
 """
     
     # Build language specific information
@@ -219,7 +226,8 @@ Frame analysis results:
 {translation_example}
 
 Please provide an accurate and natural translation, ensuring all Frame elements from the original text are preserved. Also, follow the grammar and cultural conventions of the target language.
-Return only the translation result, without any additional explanation.
+
+IMPORTANT: Return ONLY the translation result as plain text, without any JSON formatting, without any additional explanation, and without annotations or markup.
 """
     
     # Call LLM for translation
